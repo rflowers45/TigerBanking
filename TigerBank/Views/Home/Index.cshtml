@@ -1,11 +1,21 @@
 ﻿@{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Tiger Banking</h1>
-        <h3 class="display-6">Login</h3>
-   <p>Username: <input type="text" name="Username" required="required" /></p>
-    <p>Password: <input type="text" name="Password" required="required" /></p>
-    <p>Need an account? <a asp-area="" asp-controller="Home" asp-action="Privacy">Signup</a>
+    <h1 class="display-4">Welcome to Tiger Banking</h1>
+    <br />
+
+    <div align="float:right">
+
+         <a asp-area="" asp-controller="Home" asp-action="Signup">
+            <button type="submit" class="btn btn-primary" style="width: 150px">Sign Up</button>
+         </a>
+         <br /> <br />
+          <a asp-area="" asp-controller="Home" asp-action="Login">
+            <button type="submit" class="btn btn-primary" style="width: 150px">Login</button>
+          </a>
+         
+    </div>
 </div>
+ 
