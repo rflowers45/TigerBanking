@@ -24,7 +24,8 @@ var app = builder.Build();
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
-
+    app.UseDefaultFiles();
+    //app.UseStaticFiles();
     app.UseHttpsRedirection();
     app.UseStaticFiles();
 
@@ -32,8 +33,13 @@ var app = builder.Build();
 
     app.UseAuthorization();
 
+    app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapRazorPages(); //Routes for pages
+            endpoints.MapControllers(); //Routes for my API controllers
+        });
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
+        pattern: "{controller=Home}/{action=index}/{id?}");
 
 app.Run();
