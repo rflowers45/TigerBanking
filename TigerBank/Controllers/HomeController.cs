@@ -60,12 +60,35 @@ namespace TigerBank.Controllers
             return View(obj);
         }
 
-        public IActionResult SignIn(Users obj)
+        public ViewResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(Users obj)
         {
             if (ModelState.IsValid)
             {
+                Users user = _db.Users.Where(x => x.Username == obj.Username).FirstOrDefault();
+                if (user == null)
+                {
+                    TempData["error"] = "No user found.";
+                    return View(obj);
+                }
+                else
+                {
+                    string password = obj.Password;
+                    password += user.Salt;
 
-                return RedirectToAction("Index");
+                    string newHash = ComputeSha256Hash(password);
+
+                    if(newHash == user.Password)
+                    {
+                        TempData["success"] = "Login Successful!";
+                        return RedirectToAction("Index", user); //TODO: Change to correct redirect page.
+                    }
+                }
             }
             return View(obj);
         }
