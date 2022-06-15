@@ -16,7 +16,7 @@
              <input asp-for="Password" type="password" class="form-control" style="width: 350px"/>
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 150px">Sign Up</button>
+        <button type="submit"  class="btn btn-primary" style="width: 150px"> <a class="link-light" asp-action="Bank">Signup</a></button>
         <a asp-action="Index" class="btn btn-secondary" style="width: 150px">Cancel</a>
         <p>Already have an account? <a class="link-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a></p>
 

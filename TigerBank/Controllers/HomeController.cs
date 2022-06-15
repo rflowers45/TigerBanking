@@ -22,6 +22,11 @@ namespace TigerBank.Controllers
             return View();
         }
 
+        public ViewResult Bank()
+        {
+            return View();
+        }
+
         [HttpGet]
         public ViewResult Signup()
         {
