@@ -1,42 +1,52 @@
 ﻿@{
     ViewData["Title"] = "Bank Page";
 }
-
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/TigerBank.styles.css" asp-append-version="true" />
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+ <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <div class="text-center">
     <h1 class="display-4">Welcome to Tiger Bank</h1>
     <h3 class="display-6">What would you like to do today? </h3>
     <br />
 </div>
-<div class = "text-center">
- <a asp-action="Index"> 
-<article class="card">
-  <h1>Make a Deposit</h1>
-  <p>Deposit money into an account</p>
-</article>
-</a>
- <br />
- <a asp-action="Index"> 
- <article class="card">
-  <h1>Store an Amount</h1>
-  <p>Store money into an account</p>
 
-</article>
-</a>
- <br />
- <a asp-action="Index"> 
-<article class="card">
+<div class= "text-center">
+<div class="row">
+ <div class="column">
+ <!-- <a asp-action="Index"> -->
+<div class="card">
+  <img src= "~/images/deposit.jpg" alt="deposit" style="width:100%">
+  <div class="container">
+  <h1>Make a Deposit</h1>
+    </div>
+</div>
+<!-- </a> -->
+</div>
+ <div class="column">
+ <!-- <a asp-action="Index"> -->
+<div class="card">
+  <img src= "~/images/withdraw.jpg" alt="withdraw" style="width:100%">
+  <div class="container">
   <h1>Make a Withdrawal</h1>
-  <p>Withdraw a sum of money from an account</p>
-</article>
-</a>
- <br />
- <a asp-action="Index"> 
-<article class="card">
+    </div>
+</div>
+<!-- </a> -->
+</div>
+ <div class="column">
+  <!-- <a asp-action="Index"> -->
+<div class="card">
+  <img src= "~/images/search.png" alt="search" style="width:100%">
+  <div class="container">
   <h1>View Account History</h1>
-  <p>View a history of all account transactions</p>
-</article>
- </a>
- <br />
+    </div>
+</div>
+<!-- </a> -->
+ </div>
+</div>
 </div>
 
+ <script src="~/lib/jquery/dist/jquery.min.js"></script>
+ <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
+ <script src="~/js/site.js" asp-append-version="true"></script>
  
