@@ -15,12 +15,27 @@ namespace TigerBank.Migrations
                     AccountID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<int>(type: "int", nullable: false),
+                    AccountTypeID = table.Column<int>(type: "int", nullable: false),
                     AccountType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Balance = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Accounts", x => x.AccountID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountType",
+                columns: table => new
+                {
+                    AccountTypeID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountTypeNum = table.Column<int>(type: "int", nullable: false),
+                    AccountTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountType", x => x.AccountTypeID);
                 });
 
             migrationBuilder.CreateTable(
@@ -60,6 +75,9 @@ namespace TigerBank.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Accounts");
+
+            migrationBuilder.DropTable(
+                name: "AccountType");
 
             migrationBuilder.DropTable(
                 name: "Transactions");

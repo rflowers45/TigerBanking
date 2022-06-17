@@ -75,7 +75,8 @@ namespace TigerBank.Controllers
                 _db.Users.Add(obj);
                 _db.SaveChanges();
                 TempData["success"] = "New user has been created.";
-                return RedirectToAction("Index");
+                Users user = _db.Users.Where(x => x.Username == obj.Username).FirstOrDefault();
+                return RedirectToAction("Bank", user);
             }
             return View(obj);
         }
@@ -106,13 +107,37 @@ namespace TigerBank.Controllers
                     if (newHash == user.Password)
                     {
                         TempData["success"] = "Login Successful!";
-                        return RedirectToAction("Index", user); //TODO: Change to correct redirect page.
+                        return RedirectToAction("Bank", user); //TODO: Change to correct redirect page.
                     }
                 }
             }
             return View(obj);
         }
 
+        [HttpGet]
+        public ViewResult AddAccount()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddAccount(Accounts obj)
+        {
+            if (ModelState.IsValid)
+            {
+
+                string AccountType = obj.AccountType;
+                int balance = obj.Balance;
+               
+                _db.Accounts.Add(obj);
+                _db.SaveChanges();
+                TempData["success"] = "New Account has been created.";
+                
+                return RedirectToAction("Bank");
+            }
+            return View(obj);
+        }
         public string ComputeSha256Hash(string str)
         {
             using (SHA256 sha256 = SHA256.Create())

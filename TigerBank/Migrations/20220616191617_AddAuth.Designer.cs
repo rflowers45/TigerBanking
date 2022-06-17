@@ -11,7 +11,7 @@ using TigerBank.Models;
 namespace TigerBank.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20220614033927_AddAuth")]
+    [Migration("20220616191617_AddAuth")]
     partial class AddAuth
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,9 @@ namespace TigerBank.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("AccountTypeID")
+                        .HasColumnType("int");
+
                     b.Property<int>("Balance")
                         .HasColumnType("int");
 
@@ -44,6 +47,26 @@ namespace TigerBank.Migrations
                     b.HasKey("AccountID");
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("TigerBank.Models.AccountType", b =>
+                {
+                    b.Property<int>("AccountTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountTypeID"), 1L, 1);
+
+                    b.Property<string>("AccountTypeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AccountTypeNum")
+                        .HasColumnType("int");
+
+                    b.HasKey("AccountTypeID");
+
+                    b.ToTable("AccountType");
                 });
 
             modelBuilder.Entity("TigerBank.Models.Transactions", b =>
