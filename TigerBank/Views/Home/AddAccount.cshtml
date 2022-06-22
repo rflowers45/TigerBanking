@@ -1,0 +1,23 @@
+﻿@model Accounts
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Create Account</h2>
+            </hr>
+        </div>
+        <div class="mb-3">
+            <label asp-for="AccountType"></label>
+            <input asp-for="AccountType" class="form-control" />
+            <span asp-validation-for="AccountType" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Balance"></label>
+            <input asp-for="Balance" class="form-control" />
+            <span asp-validation-for="Balance" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 150px">  <a class="link-light" asp-action="Transactions">Create Account</a></button>
+        <a asp-action="Index" class="btn btn-secondary" style="width: 150px">Cancel</a>
+
+    </div>
+</form>

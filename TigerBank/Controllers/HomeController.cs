@@ -22,6 +22,28 @@ namespace TigerBank.Controllers
             return View();
         }
 
+        public ViewResult Bank(Users obj)
+        {
+            Users user = obj;
+            return View();
+        }
+
+        public ViewResult Deposit()
+        {
+            return View();
+        }
+
+        public ViewResult Withdraw()
+        {
+            return View();
+        }
+
+        public ViewResult Transactions()
+        {
+            return View();
+        }
+
+
         [HttpGet]
         public ViewResult Register()
         {
@@ -86,9 +108,34 @@ namespace TigerBank.Controllers
                     if(newHash == user.Password)
                     {
                         TempData["success"] = "Login Successful!";
-                        return RedirectToAction("Index", user); //TODO: Change to correct redirect page.
+                        return RedirectToAction("Bank", user); //TODO: Change to correct redirect page.
                     }
                 }
+            }
+            return View(obj);
+        }
+
+        [HttpGet]
+        public ViewResult AddAccount()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddAccount(Accounts obj)
+        {
+            if (ModelState.IsValid)
+            {
+
+                string AccountType = obj.AccountType;
+                int balance = obj.Balance;
+
+                _db.Accounts.Add(obj);
+                _db.SaveChanges();
+                TempData["success"] = "New Account has been created.";
+
+                return RedirectToAction("Bank");
             }
             return View(obj);
         }

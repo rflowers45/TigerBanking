@@ -10,5 +10,7 @@ namespace TigerBank.Models
         }
 
         public DbSet<Users> Users => Set<Users>();
+
+        public DbSet<Accounts> Accounts => Set<Accounts>();
     }
 }
