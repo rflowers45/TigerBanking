@@ -22,9 +22,13 @@ namespace TigerBank.Controllers
             return View();
         }
 
-        public ViewResult Bank()
+        public ViewResult Bank(Users user)
         {
-            return View();
+            //Tracking currently logged in accounts
+            Accounts currentAccount = _db.Accounts.Where(c =>c.UserID == user.UserID && c.AccountType == "Checkings").FirstOrDefault();
+
+
+            return View(currentAccount);
         }
 
         public ViewResult Deposit()
@@ -48,6 +52,7 @@ namespace TigerBank.Controllers
             return View();
         }
 
+        //****SIGNUP
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Signup(Users obj)
@@ -75,11 +80,11 @@ namespace TigerBank.Controllers
                 _db.Users.Add(obj);
                 _db.SaveChanges();
                 TempData["success"] = "New user has been created.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Bank", obj);
             }
             return View(obj);
         }
-
+        //****LOGIN
         public ViewResult Login()
         {
             return View();
@@ -106,13 +111,13 @@ namespace TigerBank.Controllers
                     if (newHash == user.Password)
                     {
                         TempData["success"] = "Login Successful!";
-                        return RedirectToAction("Index", user); //TODO: Change to correct redirect page.
+                        return RedirectToAction("Bank", user);
                     }
                 }
             }
             return View(obj);
         }
-
+        //************HELPER METHODS************
         public string ComputeSha256Hash(string str)
         {
             using (SHA256 sha256 = SHA256.Create())

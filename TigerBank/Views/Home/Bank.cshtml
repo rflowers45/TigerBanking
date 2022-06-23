@@ -1,12 +1,16 @@
 ﻿@{
     ViewData["Title"] = "Bank Page";
 }
+
+@model TigerBank.Models.Accounts
+
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/TigerBank.styles.css" asp-append-version="true" />
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <div class="text-center">
     <h1 class="display-4">Welcome to Tiger Bank</h1>
+    <h3>Checking Balance: @Model.Balance</h3>
     <h3 class="display-7">What would you like to do today? </h3>
     <br />
 </div>
