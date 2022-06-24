@@ -54,7 +54,6 @@ namespace TigerBank.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 string password = obj.Password;
                 string salt = "";
                 string charset = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -72,14 +71,24 @@ namespace TigerBank.Controllers
                 obj.Password = hashed;
                 obj.Salt = salt;
 
-                _db.Users.Add(obj);
-                _db.SaveChanges();
-                TempData["success"] = "New user has been created.";
-                Users user = _db.Users.Where(x => x.Username == obj.Username).FirstOrDefault();
-                return RedirectToAction("Bank", user);
+                if (_db.Users.Any(u => u.Username == obj.Username))
+                {
+                    TempData["error"] = "User already exists";
+                    return View();
+                }
+                else
+                {
+                    _db.Users.Add(obj);
+                    _db.SaveChanges();
+                    TempData["success"] = "New user has been created.";
+                    Users user = _db.Users.Where(x => x.Username == obj.Username).FirstOrDefault();
+                    return RedirectToAction("Bank", "AddAccount", user);
+                }
             }
-            return View(obj);
+                return View(obj);
         }
+                    
+
 
         public ViewResult Login()
         {
@@ -91,6 +100,7 @@ namespace TigerBank.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 Users user = _db.Users.Where(x => x.Username == obj.Username).FirstOrDefault();
                 if (user == null)
                 {
@@ -107,7 +117,7 @@ namespace TigerBank.Controllers
                     if (newHash == user.Password)
                     {
                         TempData["success"] = "Login Successful!";
-                        return RedirectToAction("Bank", user); //TODO: Change to correct redirect page.
+                        return RedirectToAction("Bank", "AddAccount", user); //TODO: Change to correct redirect page.
                     }
                 }
             }
@@ -122,21 +132,26 @@ namespace TigerBank.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddAccount(Accounts obj)
+        public IActionResult AddAccount(Accounts account, Users user)
         {
             if (ModelState.IsValid)
             {
+                int AccountID = account.AccountID;
+                string AccountType = account.AccountType;
+                int balance = account.Balance;
+                int uid =  _db.Users
+                    .Where(u => u.Username == user.Username)
+                    .Select(u => u.UserID)
+                    .SingleOrDefault();
+                account.UserID = uid;
 
-                string AccountType = obj.AccountType;
-                int balance = obj.Balance;
-               
-                _db.Accounts.Add(obj);
+                _db.Accounts.Add(account);
                 _db.SaveChanges();
                 TempData["success"] = "New Account has been created.";
                 
-                return RedirectToAction("Bank");
+                return RedirectToAction("Bank", "Transactions", account);
             }
-            return View(obj);
+            return View(account);
         }
         public string ComputeSha256Hash(string str)
         {
