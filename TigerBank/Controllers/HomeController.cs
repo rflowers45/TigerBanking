@@ -3,18 +3,23 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using TigerBank.Models;
 using System.Text;
+using TigerBank.Models.ViewModels;
+using TigerBank.Repository.IRepository;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TigerBank.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db, IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
@@ -82,6 +87,7 @@ namespace TigerBank.Controllers
             return View(obj);
         }
 
+        [HttpGet]
         public ViewResult Login()
         {
             return View();
@@ -118,7 +124,21 @@ namespace TigerBank.Controllers
         [HttpGet]
         public ViewResult AddAccount()
         {
-            return View();
+            AccountVM accountVM = new()
+            {
+                Account = new(),
+                UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Username,
+                    Value = i.userId.ToString()
+                }),
+                AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.AccountTypeId.ToString()
+                })
+            };
+            return View(accountVM);
         }
 
         [HttpPost]
@@ -128,7 +148,7 @@ namespace TigerBank.Controllers
             if (ModelState.IsValid)
             {
 
-                string AccountType = obj.AccountType;
+                //string AccountType = obj.AccountType;
                 int balance = obj.Balance;
 
                 _db.Accounts.Add(obj);
