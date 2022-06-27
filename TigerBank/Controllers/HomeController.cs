@@ -3,24 +3,51 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using TigerBank.Models;
 using System.Text;
+using TigerBank.Models.ViewModels;
+using TigerBank.Repository.IRepository;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TigerBank.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db, IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
             return View();
         }
+
+        public ViewResult Bank(Users obj)
+        {
+            Users user = obj;
+            return View();
+        }
+
+        public ViewResult Deposit()
+        {
+            return View();
+        }
+
+        public ViewResult Withdraw()
+        {
+            return View();
+        }
+
+        public ViewResult Transactions()
+        {
+            return View();
+        }
+
 
         [HttpGet]
         public ViewResult Register()
@@ -60,6 +87,7 @@ namespace TigerBank.Controllers
             return View(obj);
         }
 
+        [HttpGet]
         public ViewResult Login()
         {
             return View();
@@ -86,9 +114,48 @@ namespace TigerBank.Controllers
                     if(newHash == user.Password)
                     {
                         TempData["success"] = "Login Successful!";
-                        return RedirectToAction("Index", user); //TODO: Change to correct redirect page.
+                        return RedirectToAction("Bank", user); //TODO: Change to correct redirect page.
                     }
                 }
+            }
+            return View(obj);
+        }
+
+        [HttpGet]
+        public ViewResult AddAccount()
+        {
+            AccountVM accountVM = new()
+            {
+                Account = new(),
+                UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Username,
+                    Value = i.userId.ToString()
+                }),
+                AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.AccountTypeId.ToString()
+                })
+            };
+            return View(accountVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddAccount(Accounts obj)
+        {
+            if (ModelState.IsValid)
+            {
+
+                //string AccountType = obj.AccountType;
+                int balance = obj.Balance;
+
+                _db.Accounts.Add(obj);
+                _db.SaveChanges();
+                TempData["success"] = "New Account has been created.";
+
+                return RedirectToAction("Bank");
             }
             return View(obj);
         }
