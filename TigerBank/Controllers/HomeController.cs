@@ -137,7 +137,7 @@ namespace TigerBank.Controllers
             if (ModelState.IsValid)
             {
                 int AccountID = account.AccountID;
-                string AccountType = account.AccountType;
+                string AccountType = account.AccountTypeName;
                 int balance = account.Balance;
                 int uid =  _db.Users
                     .Where(u => u.Username == user.Username)

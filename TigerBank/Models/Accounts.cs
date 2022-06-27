@@ -11,11 +11,12 @@ namespace TigerBank.Models
         public int AccountID { get; set; }
         public int UserID { get; set; }
         public int AccountTypeID { get; set; }
-        public string AccountType { get; set; } = string.Empty;
+        public string AccountTypeName { get; set; } = string.Empty;
         public int Balance { get; set; }
         [ForeignKey("UserId")]
         [ValidateNever]
         public Users User { get; set; }
+
         [ForeignKey("AccountTypeId")]
         public AccountType AccountType { get; set; }
 
