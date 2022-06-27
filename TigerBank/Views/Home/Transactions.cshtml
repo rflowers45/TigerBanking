@@ -1,9 +1,32 @@
+
+﻿@model TigerBank.Views.Home.TransactionsModel
 ﻿@{
     ViewData["Title"] = "Tansactions Page";
 }
 
 <div class="text-center">
-    <h1 class="display-6">Transactions</h1>
+    <h1 class="display-6">Account History</h1>
       <button type="submit"  class="btn btn-primary" style="width: 150px"> <a class="link-light" asp-action="AddAccount">Add Account</a></button>
     <br />
+
+     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User.Username)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.Username)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Account.AccountType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Account.AccountType)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Account.Balance)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Account.Balance)
+        </dd>
+    </dl>
 </div>

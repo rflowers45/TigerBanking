@@ -1,25 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using TigerBank.Models;
 using System.Text;
-using TigerBank.Models.ViewModels;
-using TigerBank.Repository.IRepository;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TigerBank.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly AuthDbContext _db;
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db, IUnitOfWork unitOfWork)
+       // private readonly IUnitOfWork _unitOfWork;
+        public HomeController(ILogger<HomeController> logger, AuthDbContext db)
         {
             _logger = logger;
             _db = db;
-            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
@@ -27,9 +22,8 @@ namespace TigerBank.Controllers
             return View();
         }
 
-        public ViewResult Bank(Users obj)
+        public ViewResult Bank()
         {
-            Users user = obj;
             return View();
         }
 
@@ -48,20 +42,18 @@ namespace TigerBank.Controllers
             return View();
         }
 
-
         [HttpGet]
-        public ViewResult Register()
+        public ViewResult Signup()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(Users obj)
+        public IActionResult Signup(Users obj)
         {
             if (ModelState.IsValid)
             {
-
                 string password = obj.Password;
                 string salt = "";
                 string charset = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -79,13 +71,23 @@ namespace TigerBank.Controllers
                 obj.Password = hashed;
                 obj.Salt = salt;
 
-                _db.Users.Add(obj);
-                _db.SaveChanges();
-                TempData["success"] = "New user has been created.";
-                return RedirectToAction("Index");
+                if (_db.Users.Any(u => u.Username == obj.Username))
+                {
+                    TempData["error"] = "User already exists";
+                    return View();
+                }
+                else
+                {
+                    _db.Users.Add(obj);
+                    _db.SaveChanges();
+                    TempData["success"] = "New user has been created.";
+                    Users user = _db.Users.Where(x => x.Username == obj.Username).FirstOrDefault();
+                    return RedirectToAction("Bank", "AddAccount", user);
+                }
             }
-            return View(obj);
+                return View(obj);
         }
+
 
         [HttpGet]
         public ViewResult Login()
@@ -98,6 +100,7 @@ namespace TigerBank.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 Users user = _db.Users.Where(x => x.Username == obj.Username).FirstOrDefault();
                 if (user == null)
                 {
@@ -111,10 +114,10 @@ namespace TigerBank.Controllers
 
                     string newHash = ComputeSha256Hash(password);
 
-                    if(newHash == user.Password)
+                    if (newHash == user.Password)
                     {
                         TempData["success"] = "Login Successful!";
-                        return RedirectToAction("Bank", user); //TODO: Change to correct redirect page.
+                        return RedirectToAction("Bank", "AddAccount", user); //TODO: Change to correct redirect page.
                     }
                 }
             }
@@ -124,45 +127,35 @@ namespace TigerBank.Controllers
         [HttpGet]
         public ViewResult AddAccount()
         {
-            AccountVM accountVM = new()
-            {
-                Account = new(),
-                UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
-                {
-                    Text = i.Username,
-                    Value = i.userId.ToString()
-                }),
-                AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
-                {
-                    Text = i.Name,
-                    Value = i.AccountTypeId.ToString()
-                })
-            };
-            return View(accountVM);
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddAccount(Accounts obj)
+        public IActionResult AddAccount(Accounts account, Users user)
         {
             if (ModelState.IsValid)
             {
+                int AccountID = account.AccountID;
+                string AccountType = account.AccountType;
+                int balance = account.Balance;
+                int uid =  _db.Users
+                    .Where(u => u.Username == user.Username)
+                    .Select(u => u.UserID)
+                    .SingleOrDefault();
+                account.UserID = uid;
 
-                //string AccountType = obj.AccountType;
-                int balance = obj.Balance;
-
-                _db.Accounts.Add(obj);
+                _db.Accounts.Add(account);
                 _db.SaveChanges();
                 TempData["success"] = "New Account has been created.";
 
-                return RedirectToAction("Bank");
+                return RedirectToAction("Bank", "Transactions", account);
             }
-            return View(obj);
+            return View(account);
         }
-
         public string ComputeSha256Hash(string str)
         {
-            using(SHA256 sha256 = SHA256.Create())
+            using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(str));
 
