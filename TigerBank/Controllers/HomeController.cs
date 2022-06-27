@@ -31,18 +31,55 @@ namespace TigerBank.Controllers
             return View(user);
         }
 
+        [HttpGet]
         public ViewResult Deposit(int userId)
+        {
+            int UserId = userId;
+            Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId, includeProperties: "User,AccountType");
+            return View(account);
+        }
+
+        [HttpPost]
+        public IActionResult Deposit(Accounts obj)
+        {
+            if (ModelState.IsValid)
+            {
+                Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.UserId, includeProperties: "User,AccountType");
+                obj.Balance += account.Balance;
+
+                _unitOfWork.Account.Update(obj);
+                _unitOfWork.Save();
+                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == obj.UserId);
+                TempData["success"] = "Balance Updated.";
+                return RedirectToAction("Bank", user);
+            }
+            return View(obj);
+        }
+
+        [HttpGet]
+        public ViewResult Withdraw(int userId)
         {
             int UserId = userId;
             Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId);
             return View(account);
         }
 
-        public ViewResult Withdraw(int userId)
+        [HttpPost]
+        public IActionResult Withdraw(Accounts obj)
         {
-            int UserId = userId;
-            Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId);
-            return View(account);
+            if (ModelState.IsValid)
+            {
+                Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.UserId, includeProperties: "User,AccountType");
+                account.Balance -= obj.Balance;
+                obj.Balance = account.Balance;
+
+                _unitOfWork.Account.Update(obj);
+                _unitOfWork.Save();
+                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == obj.UserId);
+                TempData["success"] = "Balance Updated.";
+                return RedirectToAction("Bank", user);
+            }
+            return View(obj);
         }
 
         public ViewResult Transactions(int userId)

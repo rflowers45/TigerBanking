@@ -31,7 +31,7 @@
             </select>
             <span asp-validation-for="Account.AccountTypeId" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 150px">  <a class="link-light" asp-action="Index">Create Account</a></button>
+        <button type="submit" onclick="return ValidateInput()" class="btn btn-primary" style="width:150px">Create</button>
         <a asp-action="Index" class="btn btn-secondary" style="width: 150px">Cancel</a>
 
     </div>
