@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TigerBank.Models;
 
 namespace TigerBank.Models
 {
@@ -14,4 +15,6 @@ namespace TigerBank.Models
         public DbSet<AccountType> AccountType => Set<AccountType>();
 
     }
+  
 }
+

@@ -10,7 +10,7 @@ namespace TigerBank.Controllers
     {
         private readonly AuthDbContext _db;
         private readonly ILogger<HomeController> _logger;
-
+       // private readonly IUnitOfWork _unitOfWork;
         public HomeController(ILogger<HomeController> logger, AuthDbContext db)
         {
             _logger = logger;
@@ -87,9 +87,9 @@ namespace TigerBank.Controllers
             }
                 return View(obj);
         }
-                    
 
 
+        [HttpGet]
         public ViewResult Login()
         {
             return View();
@@ -148,7 +148,7 @@ namespace TigerBank.Controllers
                 _db.Accounts.Add(account);
                 _db.SaveChanges();
                 TempData["success"] = "New Account has been created.";
-                
+
                 return RedirectToAction("Bank", "Transactions", account);
             }
             return View(account);
