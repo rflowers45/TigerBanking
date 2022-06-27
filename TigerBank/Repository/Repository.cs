@@ -16,6 +16,11 @@ namespace TigerBank.Repository
             dbset = _db.Set<T>();
         }
 
+        public void Add(T entity)
+        {
+            dbset.Add(entity);
+        }
+
         public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbset;
@@ -31,6 +36,31 @@ namespace TigerBank.Repository
                 }
             }
             return query.ToList();
+        }
+
+        public T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        {
+            IQueryable<T> query = dbset;
+
+            query = query.Where(filter);
+            if (includeProperties != null)
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+            return query.FirstOrDefault();
+        }
+
+        public void Remove(T entity)
+        {
+            dbset.Remove(entity);
+        }
+
+        public void RemoveRange(IEnumerable<T> entities)
+        {
+            dbset.RemoveRange(entities);
         }
     }
 }

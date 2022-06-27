@@ -11,14 +11,12 @@ namespace TigerBank.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _db;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db, IUnitOfWork unitOfWork)
+        public HomeController(ILogger<HomeController> logger,  IUnitOfWork unitOfWork)
         {
             _logger = logger;
-            _db = db;
             _unitOfWork = unitOfWork;
         }
 
@@ -30,7 +28,7 @@ namespace TigerBank.Controllers
         public ViewResult Bank(Users obj)
         {
             Users user = obj;
-            return View();
+            return View(user);
         }
 
         public ViewResult Deposit()
@@ -79,8 +77,8 @@ namespace TigerBank.Controllers
                 obj.Password = hashed;
                 obj.Salt = salt;
 
-                _db.Users.Add(obj);
-                _db.SaveChanges();
+                _unitOfWork.Users.Add(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "New user has been created.";
                 return RedirectToAction("Index");
             }
@@ -98,7 +96,7 @@ namespace TigerBank.Controllers
         {
             if (ModelState.IsValid)
             {
-                Users user = _db.Users.Where(x => x.Username == obj.Username).FirstOrDefault();
+                Users user = _unitOfWork.Users.GetFirstOrDefault(x => x.Username == obj.Username);
                 if (user == null)
                 {
                     TempData["error"] = "No user found.";
@@ -143,20 +141,34 @@ namespace TigerBank.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddAccount(Accounts obj)
+        public IActionResult AddAccount(AccountVM obj)
         {
             if (ModelState.IsValid)
             {
 
                 //string AccountType = obj.AccountType;
-                int balance = obj.Balance;
+                //int balance = obj.Balance;
 
-                _db.Accounts.Add(obj);
-                _db.SaveChanges();
+                //_unitOfWork.Account.Add(obj);
+                _unitOfWork.Save();  
                 TempData["success"] = "New Account has been created.";
 
                 return RedirectToAction("Bank");
             }
+
+            obj.UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
+            {
+                Text = i.Username,
+                Value = i.userId.ToString()
+            });
+
+            obj.AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.AccountTypeId.ToString()
+            });
+
+
             return View(obj);
         }
 

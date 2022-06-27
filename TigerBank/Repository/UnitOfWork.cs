@@ -12,12 +12,15 @@ namespace TigerBank.Repository
             _db = db;
             Users = new UsersRepository(_db);
             AccountType = new AccountTypeRepository(_db);
+            Account = new AccountsRepository(_db);
 
         }
 
         public IAccountTypeRepository AccountType { get; private set; }
 
         public IUsersRepository Users { get; private set; }
+
+        public IAccountsRepository Account { get; private set; }
 
         public void Save()
         {

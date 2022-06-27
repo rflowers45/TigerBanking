@@ -25,7 +25,7 @@ namespace TigerBank.Models
         [ValidateNever]
         public Users User { get; set; }
 
-        [ForeignKey("AccountTypeId")]
+        [ValidateNever]
         public AccountType AccountType { get; set; }
 
     }

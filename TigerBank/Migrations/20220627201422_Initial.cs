@@ -4,7 +4,7 @@
 
 namespace TigerBank.Migrations
 {
-    public partial class Accounts : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,6 +19,21 @@ namespace TigerBank.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AccountType", x => x.AccountTypeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    userId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Salt = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.userId);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,6 +82,9 @@ namespace TigerBank.Migrations
 
             migrationBuilder.DropTable(
                 name: "AccountType");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

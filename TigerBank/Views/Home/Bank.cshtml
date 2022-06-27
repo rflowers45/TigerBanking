@@ -1,9 +1,10 @@
-﻿@{
+﻿@model Users
+@{
     ViewData["Title"] = "Bank Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to Tiger Bank</h1>
+    <h1 class="display-4">Welcome to Tiger Bank, @Model.Username </h1>
     <h3 class="display-7">What would you like to do today? </h3>
     <br />
 </div>

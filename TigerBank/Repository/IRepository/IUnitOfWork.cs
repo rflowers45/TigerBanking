@@ -4,6 +4,8 @@
     {
         IAccountTypeRepository AccountType { get; }
         IUsersRepository Users { get; }
+        
+        IAccountsRepository Account { get; }
 
         void Save();
     }
