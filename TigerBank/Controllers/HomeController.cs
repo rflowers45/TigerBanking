@@ -31,18 +31,24 @@ namespace TigerBank.Controllers
             return View(user);
         }
 
-        public ViewResult Deposit()
+        public ViewResult Deposit(int userId)
         {
-            return View();
+            int UserId = userId;
+            Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId);
+            return View(account);
         }
 
-        public ViewResult Withdraw()
+        public ViewResult Withdraw(int userId)
         {
-            return View();
+            int UserId = userId;
+            Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId);
+            return View(account);
         }
 
-        public ViewResult Transactions()
+        public ViewResult Transactions(int userId)
         {
+            int UserId = userId;
+
             return View();
         }
 
@@ -149,7 +155,7 @@ namespace TigerBank.Controllers
                 //string AccountType = obj.AccountType;
                 //int balance = obj.Balance;
 
-                //_unitOfWork.Account.Add(obj);
+                _unitOfWork.Account.Add(obj.Account);
                 _unitOfWork.Save();  
                 TempData["success"] = "New Account has been created.";
 
@@ -168,6 +174,26 @@ namespace TigerBank.Controllers
                 Value = i.AccountTypeId.ToString()
             });
 
+
+            return View(obj);
+        }
+
+        [HttpGet]
+        public ViewResult AddAccountType()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddAccountType(AccountType obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.AccountType.Add(obj);
+                _unitOfWork.Save();
+                TempData["success"] = "New Account Type has been created.";
+                return RedirectToAction("Index");
+            }
 
             return View(obj);
         }

@@ -9,7 +9,7 @@ namespace TigerBank.Models
         public int AccountTypeId { get; set; }
 
         [Required]
-        [DisplayName("Acount Type Name")]
+        [DisplayName("Account Type Name")]
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
     }
