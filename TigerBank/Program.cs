@@ -1,10 +1,10 @@
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using System.Diagnostics;
 using TigerBank.Models;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
      ));
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
+    builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
 
 var app = builder.Build();
 

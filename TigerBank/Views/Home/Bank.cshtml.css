@@ -1,4 +1,6 @@
+
 ﻿namespace TigerBank.Views.Home
+
 * {
     box-sizing: border-box;
 }
@@ -32,7 +34,9 @@
     text-decoration: none;
 }
 
+
     /* Responsive columns - one column layout (vertical) on small screens */
+
 @media screen and (max-width: 600px) {
     .column {
         width: 100%;
@@ -41,9 +45,9 @@
     }
 }
 /* On mouse-over, add a deeper shadow */
-    .card:hover {
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    }
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
 
 /* Add some padding inside the card container */
 .container {

@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
 namespace TigerBank.Models
 {
     public class Users
     {
+
 
         [Key]
         public int UserID { get; set; }
@@ -13,3 +15,4 @@ namespace TigerBank.Models
         public string Salt { get; set; } = string.Empty;
     }
 }
+
