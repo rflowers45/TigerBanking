@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TigerBank.Models.ViewModels
 {
-    public class AccountVM
+    public class AccountVM : PageModel
     {
-        public Accounts Account { get; set; }
+        public Accounts Account { get; set; } 
 
         [ValidateNever]
         public IEnumerable<SelectListItem> UsersList { get; set; }
@@ -13,4 +14,5 @@ namespace TigerBank.Models.ViewModels
         [ValidateNever]
         public IEnumerable<SelectListItem> AccountTypeList { get; set; }
     }
+
 }

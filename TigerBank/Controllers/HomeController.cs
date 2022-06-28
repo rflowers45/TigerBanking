@@ -34,27 +34,62 @@ namespace TigerBank.Controllers
         [HttpGet]
         public ViewResult Deposit(int userId)
         {
-            int UserId = userId;
-            Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId, includeProperties: "User,AccountType");
-            return View(account);
+            AccountVM accountVM = new()
+            {
+                Account = new(),
+                UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Username,
+                    Value = i.userId.ToString()
+                }),
+                AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.AccountTypeId.ToString()
+                })
+            };
+            //int UserId = userId;
+           // Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId, includeProperties: "User,AccountType");
+            return View(accountVM);
+
         }
 
         [HttpPost]
-        public IActionResult Deposit(Accounts obj)
+        public IActionResult Deposit(AccountVM obj)
         {
             if (ModelState.IsValid)
             {
-                Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.UserId, includeProperties: "User,AccountType");
-                obj.Balance += account.Balance;
 
-                _unitOfWork.Account.Update(obj);
+
+                Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.Account.UserId, includeProperties: "User,AccountType");
+                obj.Account.Balance += account.Balance;
+
+                _unitOfWork.Account.Update(obj.Account);
                 _unitOfWork.Save();
-                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == obj.UserId);
+                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == obj.Account.UserId);
                 TempData["success"] = "Balance Updated.";
                 return RedirectToAction("Bank", user);
             }
+
+            obj.UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
+            {
+                Text = i.Username,
+                Value = i.userId.ToString()
+            });
+
+            obj.AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.AccountTypeId.ToString()
+            });
+           
             return View(obj);
         }
+           
+               // Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.UserId, includeProperties: "User,AccountType");
+               // obj.Balance += account.Balance;
+
+               
 
         [HttpGet]
         public ViewResult Withdraw(int userId)
@@ -102,33 +137,42 @@ namespace TigerBank.Controllers
         {
             if (ModelState.IsValid)
             {
+                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.Username == obj.Username);
 
-                string password = obj.Password;
-                string salt = "";
-                string charset = "0123456789abcdefghijklmnopqrstuvwxyz";
-                int randStrLength = 10;
-
-                for (int i = 0; i < randStrLength; i++)
+                if (user == null)
                 {
-                    Random random = new Random();
-                    int index = random.Next(0, charset.Length);
-                    salt += charset[index];
+
+                    string password = obj.Password;
+                    string salt = "";
+                    string charset = "0123456789abcdefghijklmnopqrstuvwxyz";
+                    int randStrLength = 10;
+
+                    for (int i = 0; i < randStrLength; i++)
+                    {
+                        Random random = new Random();
+                        int index = random.Next(0, charset.Length);
+                        salt += charset[index];
+                    }
+
+                    password += salt;
+                    string hashed = ComputeSha256Hash(password);
+                    obj.Password = hashed;
+                    obj.Salt = salt;
+
+                    _unitOfWork.Users.Add(obj);
+                    _unitOfWork.Save();
+                    TempData["success"] = "New user has been created.";
+                    return RedirectToAction("Index");
                 }
-
-                password += salt;
-                string hashed = ComputeSha256Hash(password);
-                obj.Password = hashed;
-                obj.Salt = salt;
-
-                _unitOfWork.Users.Add(obj);
-                _unitOfWork.Save();
-                TempData["success"] = "New user has been created.";
-                return RedirectToAction("Index");
+                else
+                {
+                    TempData["error"] = "User already exists!";
+                }
             }
             return View(obj);
         }
 
-        [HttpGet]
+            [HttpGet]
         public ViewResult Login()
         {
             return View();

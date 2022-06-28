@@ -11,8 +11,8 @@ using TigerBank.Models;
 namespace TigerBank.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220627201422_Initial")]
-    partial class Initial
+    [Migration("20220628003054_AddAuth")]
+    partial class AddAuth
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
