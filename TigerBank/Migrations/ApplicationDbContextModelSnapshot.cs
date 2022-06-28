@@ -69,6 +69,40 @@ namespace TigerBank.Migrations
                     b.ToTable("AccountType");
                 });
 
+            modelBuilder.Entity("TigerBank.Models.Transactions", b =>
+                {
+                    b.Property<int>("TransactionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionID"), 1L, 1);
+
+                    b.Property<int>("AccountID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Date")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("TransactionID");
+
+                    b.HasIndex("AccountID");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("TigerBank.Models.Users", b =>
                 {
                     b.Property<int>("userId")
@@ -111,6 +145,17 @@ namespace TigerBank.Migrations
                     b.Navigation("AccountType");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TigerBank.Models.Transactions", b =>
+                {
+                    b.HasOne("TigerBank.Models.Accounts", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 #pragma warning restore 612, 618
         }

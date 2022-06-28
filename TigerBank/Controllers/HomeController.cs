@@ -48,8 +48,8 @@ namespace TigerBank.Controllers
                     Value = i.AccountTypeId.ToString()
                 })
             };
-            //int UserId = userId;
-           // Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId, includeProperties: "User,AccountType");
+            int UserId = userId;
+            Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId, includeProperties: "User,AccountType");
             return View(accountVM);
 
         }
@@ -85,37 +85,64 @@ namespace TigerBank.Controllers
            
             return View(obj);
         }
-           
-               // Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.UserId, includeProperties: "User,AccountType");
-               // obj.Balance += account.Balance;
-
+          
                
 
         [HttpGet]
         public ViewResult Withdraw(int userId)
         {
+            AccountVM accountVM = new()
+            {
+                Account = new(),
+                UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Username,
+                    Value = i.userId.ToString()
+                }),
+                AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.AccountTypeId.ToString()
+                })
+            };
             int UserId = userId;
-            Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId);
-            return View(account);
+            Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId, includeProperties: "User,AccountType");
+            return View(accountVM);
         }
 
         [HttpPost]
-        public IActionResult Withdraw(Accounts obj)
+        public IActionResult Withdraw(AccountVM obj)
         {
-            if (ModelState.IsValid)
+             if (ModelState.IsValid)
             {
-                Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.UserId, includeProperties: "User,AccountType");
-                account.Balance -= obj.Balance;
-                obj.Balance = account.Balance;
 
-                _unitOfWork.Account.Update(obj);
+
+                Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.Account.UserId, includeProperties: "User,AccountType");
+                account.Balance -= obj.Account.Balance;
+                obj.Account.Balance = account.Balance;
+
+                _unitOfWork.Account.Update(obj.Account);
                 _unitOfWork.Save();
-                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == obj.UserId);
+                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == obj.Account.UserId);
                 TempData["success"] = "Balance Updated.";
                 return RedirectToAction("Bank", user);
             }
+
+            obj.UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
+            {
+                Text = i.Username,
+                Value = i.userId.ToString()
+            });
+
+            obj.AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.AccountTypeId.ToString()
+            });
+           
             return View(obj);
         }
+        
 
         public ViewResult Transactions(int userId)
         {
@@ -162,7 +189,7 @@ namespace TigerBank.Controllers
                     _unitOfWork.Users.Add(obj);
                     _unitOfWork.Save();
                     TempData["success"] = "New user has been created.";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Bank");
                 }
                 else
                 {
@@ -273,7 +300,7 @@ namespace TigerBank.Controllers
                 _unitOfWork.AccountType.Add(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "New Account Type has been created.";
-                return RedirectToAction("Index");
+                return RedirectToAction("AddAccount");
             }
 
             return View(obj);

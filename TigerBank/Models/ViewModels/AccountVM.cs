@@ -5,15 +5,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TigerBank.Models.ViewModels
 {
-    public class AccountVM : PageModel
+    public class AccountVM
     {
-        public Accounts Account { get; set; } = default!;
+        public Accounts Account { get; set; } 
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> UsersList { get; set; } = Enumerable.Empty<SelectListItem>();
+        public IEnumerable<SelectListItem> UsersList { get; set; } 
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> AccountTypeList { get; set; } = Enumerable.Empty<SelectListItem>();
+        public IEnumerable<SelectListItem> AccountTypeList { get; set; } 
     }
 
 }

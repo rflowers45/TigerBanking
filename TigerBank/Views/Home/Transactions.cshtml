@@ -1,9 +1,41 @@
-﻿@{
-    ViewData["Title"] = "Tansactions Page";
-}
+﻿@page
+@model TigerBank.Views.Home.TransactionsModel
 
 <div class="text-center">
     <h1 class="display-6">Transactions</h1>
-      <button type="submit"  class="btn btn-primary" style="width: 150px"> <a class="link-light" asp-action="AddAccount">Add Account</a></button>
-    <br />
+     <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Users.Username)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Users.Username)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transactions.Account.AccountName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transactions.Account.AccountName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transactions.AccountTypeId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transactions.AccountTypeId)
+        </dd>
+         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transactions.Amount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transactions.Amount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transactions.Account.Balance)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transactions.Account.Balance)
+        </dd>
+    </dl>
+          <button type="submit"  class="btn btn-primary" style="width: 150px"> <a class="link-light" asp-action="AddAccount">Add Account</a></button>
+
 </div>
