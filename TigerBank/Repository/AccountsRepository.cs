@@ -17,7 +17,7 @@ namespace TigerBank.Repository
             var objFromDb = _db.Accounts.FirstOrDefault(u => u.UserId == obj.UserId);
             if(objFromDb != null)
             {
-                objFromDb.AccountName = obj.AccountName;
+                
                 objFromDb.Balance = obj.Balance;
                 objFromDb.UserId = obj.UserId;
                 objFromDb.AccountTypeId = obj.AccountTypeId;

@@ -4,7 +4,7 @@
 
 namespace TigerBank.Migrations
 {
-    public partial class AddAuth : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,7 +42,6 @@ namespace TigerBank.Migrations
                 {
                     AccountId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Balance = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     AccountTypeId = table.Column<int>(type: "int", nullable: false)

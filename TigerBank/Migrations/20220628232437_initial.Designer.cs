@@ -11,8 +11,8 @@ using TigerBank.Models;
 namespace TigerBank.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220628163858_AddAuth")]
-    partial class AddAuth
+    [Migration("20220628232437_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,10 +30,6 @@ namespace TigerBank.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountId"), 1L, 1);
-
-                    b.Property<string>("AccountName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AccountTypeId")
                         .HasColumnType("int");
