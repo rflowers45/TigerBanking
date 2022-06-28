@@ -102,28 +102,37 @@ namespace TigerBank.Controllers
         {
             if (ModelState.IsValid)
             {
+                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.Username == obj.Username);
 
-                string password = obj.Password;
-                string salt = "";
-                string charset = "0123456789abcdefghijklmnopqrstuvwxyz";
-                int randStrLength = 10;
-
-                for (int i = 0; i < randStrLength; i++)
+                if (user == null)
                 {
-                    Random random = new Random();
-                    int index = random.Next(0, charset.Length);
-                    salt += charset[index];
+
+                    string password = obj.Password;
+                    string salt = "";
+                    string charset = "0123456789abcdefghijklmnopqrstuvwxyz";
+                    int randStrLength = 10;
+
+                    for (int i = 0; i < randStrLength; i++)
+                    {
+                        Random random = new Random();
+                        int index = random.Next(0, charset.Length);
+                        salt += charset[index];
+                    }
+
+                    password += salt;
+                    string hashed = ComputeSha256Hash(password);
+                    obj.Password = hashed;
+                    obj.Salt = salt;
+
+                    _unitOfWork.Users.Add(obj);
+                    _unitOfWork.Save();
+                    TempData["success"] = "New user has been created.";
+                    return RedirectToAction("Index");
                 }
-
-                password += salt;
-                string hashed = ComputeSha256Hash(password);
-                obj.Password = hashed;
-                obj.Salt = salt;
-
-                _unitOfWork.Users.Add(obj);
-                _unitOfWork.Save();
-                TempData["success"] = "New user has been created.";
-                return RedirectToAction("Index");
+                else
+                {
+                    TempData["error"] = "User already exists!";
+                }
             }
             return View(obj);
         }
