@@ -187,6 +187,7 @@ namespace TigerBank.Controllers
                     obj.Salt = salt;
 
                     _unitOfWork.Users.Add(obj);
+                    _unitOfWork.Save();
                     //***Creating new Accounts
                     //Checking
                     Accounts newChecking = new Accounts()
@@ -210,10 +211,12 @@ namespace TigerBank.Controllers
                     };
 
                     //Adding to DB
-                    _unitOfWork.Account.Add(newChecking);
-                    _unitOfWork.Account.Add(newSavings);
-                    _unitOfWork.Account.Add(newSavings2);
-                    _unitOfWork.Save();
+                   _unitOfWork.Account.Add(newChecking);
+                   _unitOfWork.Save();
+                   _unitOfWork.Account.Add(newSavings);
+                   _unitOfWork.Save();
+                   _unitOfWork.Account.Add(newSavings2);
+                   _unitOfWork.Save();
                     TempData["success"] = "New user has been created.";
                     return RedirectToAction("Bank");
                 }
