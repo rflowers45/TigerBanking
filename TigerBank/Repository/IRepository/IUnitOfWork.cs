@@ -7,6 +7,8 @@
         
         IAccountsRepository Account { get; }
 
+        ITransactionRepository Transaction { get; }
+
         void Save();
     }
 }

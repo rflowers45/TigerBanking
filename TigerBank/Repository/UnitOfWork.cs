@@ -13,6 +13,7 @@ namespace TigerBank.Repository
             Users = new UsersRepository(_db);
             AccountType = new AccountTypeRepository(_db);
             Account = new AccountsRepository(_db);
+            Transaction = new TransactionRepository(_db);
 
         }
 
@@ -21,6 +22,8 @@ namespace TigerBank.Repository
         public IUsersRepository Users { get; private set; }
 
         public IAccountsRepository Account { get; private set; }
+
+        public ITransactionRepository Transaction { get; private set; }
 
         public void Save()
         {

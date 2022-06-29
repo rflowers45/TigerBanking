@@ -65,6 +65,21 @@ namespace TigerBank.Controllers
                 
                 _unitOfWork.Account.Update(account);
                 _unitOfWork.Save();
+
+                Transactions newTransaction = new Transactions()
+                {
+                    AccountID = account.AccountId,
+                    AccountTypeId = account.AccountTypeId,
+                    UserId = account.UserId,
+                    TransactionType = "Deposit",
+                    Balance = account.Balance,
+                    Amount = obj.Account.Balance,
+                    Date = DateTime.Now
+                };
+
+                _unitOfWork.Transaction.Add(newTransaction);
+                _unitOfWork.Save();
+
                 User user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == UserId);
                 TempData["success"] = "Balance Updated.";
                 return RedirectToAction("Bank", user);
@@ -112,6 +127,21 @@ namespace TigerBank.Controllers
 
                 _unitOfWork.Account.Update(account);
                 _unitOfWork.Save();
+
+                Transactions newTransaction = new Transactions()
+                {
+                    AccountID = account.AccountId,
+                    AccountTypeId = account.AccountTypeId,
+                    UserId = account.UserId,
+                    TransactionType = "Withdraw",
+                    Balance = account.Balance,
+                    Amount = obj.Account.Balance,
+                    Date = DateTime.Now
+                };
+
+                _unitOfWork.Transaction.Add(newTransaction);
+                _unitOfWork.Save();
+
                 User user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == UserId);
                 TempData["success"] = "Balance Updated.";
                 return RedirectToAction("Bank", user);
@@ -131,7 +161,9 @@ namespace TigerBank.Controllers
         {
             int UserId = userId;
 
-            return View();
+            IEnumerable<Transactions> objTransactionList = _unitOfWork.Transaction.GetAll().Where(u => u.UserId == UserId);
+            
+            return View(objTransactionList);
         }
 
 
