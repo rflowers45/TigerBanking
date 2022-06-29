@@ -9,6 +9,9 @@ namespace TigerBank.Models.ViewModels
     {
         public Accounts Account { get; set; } 
 
+        public Users User { get; set; }
+        public AccountType AccountType { get; set; }
+
         [ValidateNever]
         public IEnumerable<SelectListItem> UsersList { get; set; } 
 
