@@ -3,7 +3,7 @@ using TigerBank.Repository.IRepository;
 
 namespace TigerBank.Repository
 {
-    public class UsersRepository : Repository<Users>, IUsersRepository
+    public class UsersRepository : Repository<User>, IUsersRepository
     {
         private readonly ApplicationDbContext _db;
 
@@ -12,7 +12,7 @@ namespace TigerBank.Repository
             _db = db;
         }
 
-        public void Update(Users obj)
+        public void Update(User obj)
         {
             _db.Users.Update(obj);
         }

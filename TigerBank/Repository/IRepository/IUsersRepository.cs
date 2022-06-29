@@ -2,8 +2,8 @@
 
 namespace TigerBank.Repository.IRepository
 {
-    public interface IUsersRepository : IRepository<Users>
+    public interface IUsersRepository : IRepository<User>
     {
-        void Update(Users obj);
+        void Update(User obj);
     }
 }

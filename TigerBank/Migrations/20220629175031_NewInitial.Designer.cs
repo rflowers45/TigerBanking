@@ -11,8 +11,8 @@ using TigerBank.Models;
 namespace TigerBank.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220628232437_initial")]
-    partial class initial
+    [Migration("20220629175031_NewInitial")]
+    partial class NewInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -101,7 +101,7 @@ namespace TigerBank.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("TigerBank.Models.Users", b =>
+            modelBuilder.Entity("TigerBank.Models.User", b =>
                 {
                     b.Property<int>("userId")
                         .ValueGeneratedOnAdd()
@@ -134,7 +134,7 @@ namespace TigerBank.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TigerBank.Models.Users", "User")
+                    b.HasOne("TigerBank.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

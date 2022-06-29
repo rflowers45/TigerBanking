@@ -19,7 +19,7 @@ namespace TigerBank.Views.Home
         }
 
         public Transactions Transactions { get; set; } = default!;
-        public Users Users { get; set; } = default!;
+        public User Users { get; set; } = default!;
 
         public Accounts Accounts { get; set; } = default!;
 

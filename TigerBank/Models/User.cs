@@ -2,7 +2,7 @@
 
 namespace TigerBank.Models
 {
-    public class Users
+    public class User
     {
         [Key]
         public int userId { get; set; }
