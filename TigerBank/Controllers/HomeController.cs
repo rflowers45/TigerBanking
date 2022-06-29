@@ -98,7 +98,7 @@ namespace TigerBank.Controllers
             int AccountTypeId = atId;
             AccountVM accountVM = new()
             {
-                Account = _unitOfWork.Account.GetFirstOrDefault(u => u.AccountTypeId == AccountTypeId),
+                Account = new(),
                 User = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == UserId),
                 AccountType = new()
             };
