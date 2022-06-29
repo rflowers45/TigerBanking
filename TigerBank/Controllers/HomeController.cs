@@ -49,7 +49,7 @@ namespace TigerBank.Controllers
                
                 int num = Int32.Parse(Request.Form["Accounts"]);
                 Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.UserId && u.AccountTypeId == num, includeProperties: "User,AccountType");
-                obj.Balance += account.Balance;
+                account.Balance += obj.Balance;
 
                 _unitOfWork.Account.Update(account);
                 _unitOfWork.Save();
@@ -92,14 +92,15 @@ namespace TigerBank.Controllers
         }
         
 
-        public ViewResult Transactions(int userId)
+        public ViewResult Transactions(int userId, int atId)
         {
             int UserId = userId;
+            int AccountTypeId = atId;
             AccountVM accountVM = new()
             {
-                Account = new(),
+                Account = _unitOfWork.Account.GetFirstOrDefault(u => u.AccountTypeId == AccountTypeId),
                 User = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == UserId),
-            AccountType = new()
+                AccountType = new()
             };
             return View(accountVM);
         }

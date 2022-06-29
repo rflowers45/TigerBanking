@@ -2,22 +2,28 @@
 @using TigerBank.Models.ViewModels
 
 <div class="text-center">
-   <div class="border p-3 mt-4">
-        <div class="row pb-2">
-            <h2 class="text-primary">Transactions</h2>
-        <br />
-        </div>
-        <div class="mb-3">
-            <label asp-for="User.Username"></label>
-           <p> @Html.DisplayFor(model => model.User.Username)</p>
-        </div>
-        <div class="mb-3">
-            <label asp-for="AccountType.Name"></label>
-            <p> @Html.DisplayFor(model => model.AccountType.Name)</p> 
-        </div>
-        <div class="mb-3">
-            <label asp-for="Account.Balance"></label>
-           <p>  @Html.DisplayFor(model => model.Account.Balance)</p>
-        </div>
-    </div>
-</div>
+    <h1 class="display-6">Transactions</h1>
+     <hr />
+    <dl class="row">
+         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User.Username)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.Username)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Account.AccountType.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Account.AccountType.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Account.Balance)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Account.Balance)
+        </dd>
+    </dl>
+ </div>
+
+       
