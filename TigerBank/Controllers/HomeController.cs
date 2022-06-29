@@ -34,55 +34,29 @@ namespace TigerBank.Controllers
         [HttpGet]
         public ViewResult Deposit(int userId)
         {
-            AccountVM accountVM = new()
-            {
-                Account = new(),
-                UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
-                {
-                    Text = i.Username,
-                    Value = i.userId.ToString()
-                }),
-                AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
-                {
-                    Text = i.Name,
-                    Value = i.AccountTypeId.ToString()
-                })
-            };
+
             int UserId = userId;
             Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId, includeProperties: "User,AccountType");
-            return View(accountVM);
+            return View(account);
 
         }
 
         [HttpPost]
-        public IActionResult Deposit(AccountVM obj)
+        public IActionResult Deposit(Accounts obj)
         {
             if (ModelState.IsValid)
             {
+               
+                int num = Int32.Parse(Request.Form["Accounts"]);
+                Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.UserId && u.AccountTypeId == num, includeProperties: "User,AccountType");
+                obj.Balance += account.Balance;
 
-
-                Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.Account.UserId, includeProperties: "User,AccountType");
-                obj.Account.Balance += account.Balance;
-
-                _unitOfWork.Account.Update(obj.Account);
+                _unitOfWork.Account.Update(obj);
                 _unitOfWork.Save();
-                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == obj.Account.UserId);
+                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == obj.UserId);
                 TempData["success"] = "Balance Updated.";
                 return RedirectToAction("Bank", user);
             }
-
-            obj.UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
-            {
-                Text = i.Username,
-                Value = i.userId.ToString()
-            });
-
-            obj.AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
-            {
-                Text = i.Name,
-                Value = i.AccountTypeId.ToString()
-            });
-           
             return View(obj);
         }
           
@@ -94,11 +68,6 @@ namespace TigerBank.Controllers
             AccountVM accountVM = new()
             {
                 Account = new(),
-                UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
-                {
-                    Text = i.Username,
-                    Value = i.userId.ToString()
-                }),
                 AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
                 {
                     Text = i.Name,

@@ -1,5 +1,5 @@
-﻿@model AccountVM
-@using TigerBank.Models.ViewModels
+﻿@model Accounts
+@using TigerBank.Models
 
 <form method="post">
     
@@ -9,16 +9,17 @@
         <br />
         </div>
          <div class="mb-3 col-6">
-            <label asp-for="Account.AccountTypeId"></label>
-            <select asp-for="Account.AccountTypeId" asp-items="@Model.AccountTypeList" class="form-select">
-                <option disabled selected>--Select Category--</option>
+            <select name= "Accounts">
+            <option value="" >Select an Account</option>
+            <option value="1" >Checking</option>
+            <option value="2" >Savings</option>
+            <option value="3" >Savings2</option>
             </select>
-            <span asp-validation-for="Account.AccountTypeId" class="text-danger"></span>
-        </div>
+            </div>
         <div class="mb-3">
-            <label asp-for="Account.Balance"></label>
-            <input asp-for="Account.Balance" class="form-control" />
-            <span asp-validation-for="Account.Balance" class="text-danger"></span>
+            <label asp-for="Balance"></label>
+            <input asp-for="Balance" class="form-control" />
+            <span asp-validation-for="Balance" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-primary" style="width: 150px">Deposit</button>

@@ -4,7 +4,7 @@
 
 namespace TigerBank.Migrations
 {
-    public partial class initial : Migration
+    public partial class AddAuth : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
