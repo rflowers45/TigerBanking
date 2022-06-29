@@ -42,11 +42,11 @@ namespace TigerBank.Controllers
                     Text = i.Username,
                     Value = i.userId.ToString()
                 }),
-                AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
+                /*AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
                 {
                     Text = i.Name,
                     Value = i.AccountTypeId.ToString()
-                })
+                })*/
             };
             int UserId = userId;
             Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId, includeProperties: "User,AccountType");
@@ -57,19 +57,8 @@ namespace TigerBank.Controllers
         [HttpPost]
         public IActionResult Deposit(AccountVM obj)
         {
-            if (ModelState.IsValid)
-            {
-
-
-                Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.Account.UserId, includeProperties: "User,AccountType");
-                obj.Account.Balance += account.Balance;
-
-                _unitOfWork.Account.Update(obj.Account);
-                _unitOfWork.Save();
-                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == obj.Account.UserId);
-                TempData["success"] = "Balance Updated.";
-                return RedirectToAction("Bank", user);
-            }
+            //Need to somehow take what account the user selecte
+            
 
             obj.UsersList = _unitOfWork.Users.GetAll().Select(i => new SelectListItem
             {
@@ -77,12 +66,28 @@ namespace TigerBank.Controllers
                 Value = i.userId.ToString()
             });
 
-            obj.AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
+           /* obj.AccountTypeList = _unitOfWork.AccountType.GetAll().Select(i => new SelectListItem
             {
                 Text = i.Name,
                 Value = i.AccountTypeId.ToString()
-            });
-           
+            });*/
+
+            if (ModelState.IsValid)
+            {
+                //Grabbing the selected index from the account list
+                int number = Int32.Parse(Request.Form["Accounts"]);
+                //Getting the account associated with the selected index. NOTE: Account is currently being assigned as null, not sure why. Working on a fix
+                Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == obj.Account.UserId && u.AccountTypeId == number);
+                obj.Account.Balance += account.Balance;
+
+                
+                _unitOfWork.Account.Update(obj.Account);
+                _unitOfWork.Save();
+                Users user = _unitOfWork.Users.GetFirstOrDefault(u => u.userId == obj.Account.UserId);
+                TempData["success"] = "Balance Updated.";
+                return RedirectToAction("Bank", user);
+            }
+
             return View(obj);
         }
           
@@ -203,6 +208,7 @@ namespace TigerBank.Controllers
                         Balance = 0,
                         UserId = obj.userId
                     };
+                    //2nd Savings Account
                     Accounts newSavings2 = new Accounts()
                     {
                         AccountTypeId = 3,
