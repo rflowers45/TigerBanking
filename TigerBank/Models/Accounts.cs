@@ -10,9 +10,6 @@ namespace TigerBank.Models
         public int AccountId { get; set; }
 
         [Required]
-        public string AccountName { get; set; }
-
-        [Required]
         public int Balance { get; set; }
 
         [Required]
@@ -21,10 +18,11 @@ namespace TigerBank.Models
         [Required]
         public int AccountTypeId { get; set; }
 
-        [ForeignKey("UserId")]
+        [ForeignKey("userId")]
         [ValidateNever]
         public Users User { get; set; }
 
+        [ForeignKey("AccountTypeId")]
         [ValidateNever]
         public AccountType AccountType { get; set; }
 

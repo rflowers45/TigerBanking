@@ -11,8 +11,8 @@ using TigerBank.Models;
 namespace TigerBank.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220627201422_Initial")]
-    partial class Initial
+    [Migration("20220628232437_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,10 +30,6 @@ namespace TigerBank.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountId"), 1L, 1);
-
-                    b.Property<string>("AccountName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AccountTypeId")
                         .HasColumnType("int");
@@ -69,6 +65,40 @@ namespace TigerBank.Migrations
                     b.HasKey("AccountTypeId");
 
                     b.ToTable("AccountType");
+                });
+
+            modelBuilder.Entity("TigerBank.Models.Transactions", b =>
+                {
+                    b.Property<int>("TransactionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionID"), 1L, 1);
+
+                    b.Property<int>("AccountID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Date")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("TransactionID");
+
+                    b.HasIndex("AccountID");
+
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("TigerBank.Models.Users", b =>
@@ -113,6 +143,17 @@ namespace TigerBank.Migrations
                     b.Navigation("AccountType");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TigerBank.Models.Transactions", b =>
+                {
+                    b.HasOne("TigerBank.Models.Accounts", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 #pragma warning restore 612, 618
         }
