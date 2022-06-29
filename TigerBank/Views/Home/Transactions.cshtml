@@ -1,39 +1,58 @@
-﻿<div class="container p-3">
-<table class="table table-bordered table-striped" style="width:100%">
-    <thead>
-        <tr>
-            <th>
-                Date
-            </th>
-            <th>
-                Transaction Type
-            </th>
-            <th>
-                How Much
-            </th>
-            <th>
-                Balance
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var obj in Model)
-        {
-            <tr>
-                <td width="25%">
-                    @obj.Date
-                </td>
-                <td width="25%">
-                    @obj.TransactionType
-                </td>
-                <td width="25%">
-                    @obj.Amount
-                </td>
-                <td width="25%">
-                    @obj.Balance
-                </td>
-            </tr>
-        }
-    </tbody>
-    </table>
+﻿<form method="post">
+    <div class="mb-3">
+
+        <div class="row pb-2">
+            <h2 class="text-primary">Transactions</h2>
+            <br />
+        </div>
+        <div class="mb-3">
+            <select name="Accounts">
+                <option value="">Select an Account</option>
+                <option value="1">Checking</option>
+                <option value="2">Savings</option>
+                <option value="3">Savings 2</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 150px">Submit</button>
     </div>
+</form>
+
+<div class="container p-3">
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Transaction Type
+                </th>
+                <th>
+                    How Much
+                </th>
+                <th>
+                    Balance
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                <tr>
+                    <td width="25%">
+                        @obj.Date
+                    </td>
+                    <td width="25%">
+                        @obj.TransactionType
+                    </td>
+                    <td width="25%">
+                        @obj.Amount
+                    </td>
+                    <td width="25%">
+                        @obj.Balance
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

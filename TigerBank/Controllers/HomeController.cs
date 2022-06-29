@@ -15,7 +15,7 @@ namespace TigerBank.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _db;
 
-        public HomeController(ILogger<HomeController> logger,  IUnitOfWork unitOfWork, ApplicationDbContext db)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, ApplicationDbContext db)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
@@ -52,17 +52,18 @@ namespace TigerBank.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Deposit(AccountVM obj, int userId)
         {
             if (ModelState.IsValid)
             {
                 int UserId = userId;
-                
+
                 //Accounts account = _unitOfWork.Account.GetFirstOrDefault(u => u.UserId == UserId && u.AccountTypeId == obj.Account.AccountTypeId, includeProperties: "User,AccountType");
                 Accounts account = _db.Accounts.Where(u => u.UserId == UserId && u.AccountTypeId == obj.Account.AccountTypeId).FirstOrDefault();
                 account.Balance += obj.Account.Balance;
 
-                
+
                 _unitOfWork.Account.Update(account);
                 _unitOfWork.Save();
 
@@ -93,8 +94,8 @@ namespace TigerBank.Controllers
 
             return View(obj);
         }
-          
-               
+
+
 
         [HttpGet]
         public ViewResult Withdraw(int userId)
@@ -114,6 +115,7 @@ namespace TigerBank.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Withdraw(AccountVM obj, int userId)
         {
             if (ModelState.IsValid)
@@ -155,15 +157,29 @@ namespace TigerBank.Controllers
 
             return View(obj);
         }
-        
+
 
         public ViewResult Transactions(int userId)
         {
             int UserId = userId;
-
             IEnumerable<Transactions> objTransactionList = _unitOfWork.Transaction.GetAll().Where(u => u.UserId == UserId);
-            
             return View(objTransactionList);
+        }
+
+        [HttpPost, ActionName("Transactions")]
+        [ValidateAntiForgeryToken]
+        public IActionResult GetTransactions(int userId)
+        {
+            if (ModelState.IsValid)
+            {
+                int UserId = userId;
+                int number = Int32.Parse(Request.Form["Accounts"]);
+
+                IEnumerable<Transactions> objTransactionList = _unitOfWork.Transaction.GetAll().Where(u => u.UserId == UserId && u.AccountTypeId == number);
+
+                return View(objTransactionList);
+            }
+            return View(userId);
         }
 
 
